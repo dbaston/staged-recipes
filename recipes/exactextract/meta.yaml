@@ -1,0 +1,57 @@
+{% set name = "python-exactextract" %}
+{% set version = "0.2.0.dev0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/isciences/exactextract/archive/0df60d0752c3a21bf8955e2a264786251d48ce7c.zip
+  sha256: 2c516ce7bda9dc16cf4eb614faf52bfc717a1a23c99c43774e6762c7afa1f0bf
+
+build:
+  # If the installation is complex, or different between Unix and Windows, use separate bld.bat and build.sh files instead of this key.
+  # By default, the package will be built for the Python versions supported by conda-forge and for all major OSs.
+  # Add the line "skip: True  # [py<35]" (for example) to limit to Python 3.5 and newer, or "skip: True  # [not win]" to limit to Windows.
+  # More info about selectors can be found in the conda-build docs: 
+  # https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#preprocessing-selectors
+  script: {{ PYTHON }} -m pip install ./python -vv
+  number: 0
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - make
+  host:
+    - python
+    - pip
+    - geos
+    - pybind11
+  run:
+    - python
+    - geos
+    - pybind11
+    - numpy
+
+test:
+  imports:
+    - exactextract
+
+about:
+  home: https://github.com/isciences/exactextract
+  summary: 'Fast and accurate raster zonal statistics'
+  description: |
+    exactextract provides a fast and accurate algorithm for summarizing the values
+    in the portion of a raster dataset that is covered by a polygon, often referred
+    to as _zonal statistics_. Unlike other zonal statistics implementations, it takes
+    into account raster cells that are partially covered by the polygon.  
+  license: Apache-2.0
+  license_family: Apache
+  license_file: LICENSE
+  dev_url: https://github.com/isciences/exactextract
+
+extra:
+  recipe-maintainers:
+    - dbaston
